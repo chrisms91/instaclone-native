@@ -5,6 +5,10 @@ import { Ionicons } from '@expo/vector-icons';
 import * as Font from 'expo-font';
 import { Asset } from 'expo-asset';
 import { StyleSheet, Text, View } from 'react-native';
+import LoggedOutNav from './src/navigators/LoggedOutNav';
+import { NavigationContainer } from '@react-navigation/native';
+import { Appearance, AppearanceProvider } from 'react-native-appearance';
+import { ThemeProvider } from 'styled-components';
 
 export default function App() {
   const [loading, setLoading] = useState(true);
@@ -13,7 +17,7 @@ export default function App() {
     const fontsToLoad = [Ionicons.font];
     const fontPromises = fontsToLoad.map((font) => Font.loadAsync(font));
     const imagesToLoad = [
-      require('./assets/insta_logo.png'),
+      require('./assets/logo.png'),
       'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Instagram_logo.svg/840px-Instagram_logo.svg.png',
     ];
     const imagePromises = imagesToLoad.map((img) => Asset.loadAsync(img));
@@ -28,19 +32,14 @@ export default function App() {
       />
     );
   }
+  // const subscription = Appearance.addChangeListener(({ colorScheme }) => {
+  //   console.log(colorScheme);
+  // });
   return (
-    <View style={styles.container}>
-      <Text>Yo update it</Text>
-      <StatusBar style="auto" />
-    </View>
+    <AppearanceProvider>
+      <NavigationContainer>
+        <LoggedOutNav />
+      </NavigationContainer>
+    </AppearanceProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
