@@ -23,11 +23,11 @@ const CreateAccount = () => {
   };
 
   useEffect(() => {
-    register('firstName');
-    register('lastName');
-    register('userName');
-    register('email');
-    register('password');
+    register('firstName', { required: true });
+    register('lastName', { required: true });
+    register('userName', { required: true });
+    register('email', { required: true });
+    register('password', { required: true });
   }, [register]);
 
   return (

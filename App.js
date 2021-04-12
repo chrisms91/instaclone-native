@@ -9,9 +9,13 @@ import LoggedOutNav from './src/navigators/LoggedOutNav';
 import { NavigationContainer } from '@react-navigation/native';
 // import { Appearance, AppearanceProvider } from 'react-native-appearance';
 import { ThemeProvider } from 'styled-components';
+import client, { isLoggedInVar } from './src/apollo';
+import { ApolloProvider, useReactiveVar } from '@apollo/client';
+import LoggedInNav from './src/navigators/LoggedInNav';
 
 export default function App() {
   const [loading, setLoading] = useState(true);
+  const isLoggedIn = useReactiveVar(isLoggedInVar);
   const onFinish = () => setLoading(false);
   const preload = () => {
     const fontsToLoad = [Ionicons.font];
@@ -37,9 +41,11 @@ export default function App() {
   // });
   return (
     // <AppearanceProvider>
-    <NavigationContainer>
-      <LoggedOutNav />
-    </NavigationContainer>
+    <ApolloProvider client={client}>
+      <NavigationContainer>
+        {isLoggedIn ? <LoggedInNav /> : <LoggedOutNav />}
+      </NavigationContainer>
+    </ApolloProvider>
     // </AppearanceProvider>
   );
 }
