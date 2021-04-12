@@ -7,7 +7,7 @@ import { Asset } from 'expo-asset';
 import { StyleSheet, Text, View } from 'react-native';
 import LoggedOutNav from './src/navigators/LoggedOutNav';
 import { NavigationContainer } from '@react-navigation/native';
-import { Appearance, AppearanceProvider } from 'react-native-appearance';
+// import { Appearance, AppearanceProvider } from 'react-native-appearance';
 import { ThemeProvider } from 'styled-components';
 
 export default function App() {
@@ -36,10 +36,10 @@ export default function App() {
   //   console.log(colorScheme);
   // });
   return (
-    <AppearanceProvider>
-      <NavigationContainer>
-        <LoggedOutNav />
-      </NavigationContainer>
-    </AppearanceProvider>
+    // <AppearanceProvider>
+    <NavigationContainer>
+      <LoggedOutNav />
+    </NavigationContainer>
+    // </AppearanceProvider>
   );
 }
