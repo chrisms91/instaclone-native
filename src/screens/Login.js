@@ -17,8 +17,13 @@ const LOGIN_MUTATION = gql`
   }
 `;
 
-const Login = ({ navigation }) => {
-  const { register, handleSubmit, setValue, watch } = useForm();
+const Login = ({ route: { params } }) => {
+  const { register, handleSubmit, setValue, watch } = useForm({
+    defaultValues: {
+      userName: params?.userName,
+      password: params?.password,
+    },
+  });
   const passwordRef = useRef();
   const onCompleted = (data) => {
     const {
@@ -55,6 +60,7 @@ const Login = ({ navigation }) => {
   return (
     <AuthLayout>
       <TextInput
+        value={watch('userName')}
         autoCorrect={false}
         // autoFocus={true}
         placeholder="Username"
@@ -65,6 +71,7 @@ const Login = ({ navigation }) => {
         onChangeText={(text) => setValue('userName', text)}
       />
       <TextInput
+        value={watch('password')}
         ref={passwordRef}
         autoCorrect={false}
         placeholder="Password"

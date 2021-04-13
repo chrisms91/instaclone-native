@@ -1,3 +1,4 @@
+import { gql, useMutation } from '@apollo/client';
 import React, { useRef } from 'react';
 import styled from 'styled-components/native';
 import { KeyboardAvoidingView, Platform, Text, View } from 'react-native';
@@ -7,8 +8,48 @@ import { TextInput } from '../components/auth/AuthShared';
 import { useForm } from 'react-hook-form';
 import { useEffect } from 'react';
 
-const CreateAccount = () => {
-  const { register, handleSubmit, setValue } = useForm();
+const CREATE_ACCOUNT_MUTATION = gql`
+  mutation createAccount(
+    $firstName: String!
+    $lastName: String
+    $userName: String!
+    $email: String!
+    $password: String!
+  ) {
+    createAccount(
+      firstName: $firstName
+      lastName: $lastName
+      userName: $userName
+      email: $email
+      password: $password
+    ) {
+      ok
+      error
+    }
+  }
+`;
+
+const CreateAccount = ({ navigation }) => {
+  const { register, handleSubmit, setValue, getValues } = useForm();
+  const onCompleted = (data) => {
+    const {
+      createAccount: { ok },
+    } = data;
+
+    const { userName, password } = getValues();
+
+    if (ok) {
+      navigation.navigate('Login', {
+        userName,
+        password,
+      });
+    }
+  };
+
+  const [
+    createAccountMutation,
+    { loading },
+  ] = useMutation(CREATE_ACCOUNT_MUTATION, { onCompleted });
   const lastNameRef = useRef();
   const userNameRef = useRef();
   const emailRef = useRef();
@@ -19,7 +60,13 @@ const CreateAccount = () => {
   };
 
   const onValid = (data) => {
-    console.log(data);
+    if (!loading) {
+      createAccountMutation({
+        variables: {
+          ...data,
+        },
+      });
+    }
   };
 
   useEffect(() => {
