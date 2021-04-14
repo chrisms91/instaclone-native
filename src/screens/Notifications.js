@@ -11,12 +11,12 @@ const Container = styled.View`
   background-color: black;
 `;
 
-const Feed = () => {
+const Notifications = () => {
   return (
     <Container>
-      <Text style={{ color: 'white' }}>Feed</Text>
+      <Text style={{ color: 'white' }}>Notifications</Text>
     </Container>
   );
 };
 
-export default Feed;
+export default Notifications;
