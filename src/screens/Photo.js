@@ -11,14 +11,14 @@ const Container = styled.View`
   background-color: black;
 `;
 
-const Search = ({ navigation }) => {
+const Photo = ({ navigation }) => {
   return (
     <Container>
-      <TouchableOpacity onPress={() => navigation.navigate('Photo')}>
-        <Text style={{ color: 'white' }}>Search</Text>
+      <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
+        <Text style={{ color: 'white' }}>Photo</Text>
       </TouchableOpacity>
     </Container>
   );
 };
 
-export default Search;
+export default Photo;

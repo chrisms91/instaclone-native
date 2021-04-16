@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View } from 'react-native';
+import { Text, TouchableOpacity, View } from 'react-native';
 import styled from 'styled-components/native';
 import { logUserOut } from '../apollo';
 import { colors } from '../colors';
@@ -11,10 +11,12 @@ const Container = styled.View`
   background-color: black;
 `;
 
-const Feed = () => {
+const Feed = ({ navigation }) => {
   return (
     <Container>
-      <Text style={{ color: 'white' }}>Feed</Text>
+      <TouchableOpacity onPress={() => navigation.navigate('Photo')}>
+        <Text style={{ color: 'white' }}>Feed</Text>
+      </TouchableOpacity>
     </Container>
   );
 };

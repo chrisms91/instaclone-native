@@ -14,7 +14,7 @@ const Container = styled.View`
 const Profile = () => {
   return (
     <Container>
-      <Text style={{ color: 'white' }}>Profile</Text>
+      <Text style={{ color: 'white' }}>Someone's Profile</Text>
     </Container>
   );
 };

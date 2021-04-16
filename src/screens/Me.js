@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { Text, View } from 'react-native';
 import styled from 'styled-components/native';
 import { logUserOut } from '../apollo';
 import { colors } from '../colors';
@@ -11,14 +11,12 @@ const Container = styled.View`
   background-color: black;
 `;
 
-const Search = ({ navigation }) => {
+const Me = () => {
   return (
     <Container>
-      <TouchableOpacity onPress={() => navigation.navigate('Photo')}>
-        <Text style={{ color: 'white' }}>Search</Text>
-      </TouchableOpacity>
+      <Text style={{ color: 'white' }}>My Profile</Text>
     </Container>
   );
 };
 
-export default Search;
+export default Me;
