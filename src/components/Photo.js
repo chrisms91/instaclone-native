@@ -17,12 +17,13 @@ const UserAvatar = styled.Image`
   margin-right: 10px;
   width: 25px;
   height: 25px;
-  border-radius: 12.5;
+  border-radius: 12.5px;
 `;
 
 const UserName = styled.Text`
   color: white;
-  font-weight: 600;
+  font-weight: 700;
+  margin-right: 5px;
 `;
 
 const File = styled.Image``;
@@ -42,7 +43,6 @@ const Caption = styled.View`
 
 const CaptionText = styled.Text`
   color: white;
-  margin-left: 5px;
 `;
 
 const Likes = styled.Text`
@@ -62,13 +62,13 @@ const Photo = ({ id, user, caption, totalLikes, isLiked, file }) => {
 
   useEffect(() => {
     Image.getSize(file, (width, height) => {
-      if (height > 1350) {
-        height = height / 8;
-      } else if (height < 566) {
-        height = height / 2;
-      } else {
-        height = height / 3;
-      }
+      // if (height > 1350) {
+      //   height = height / 8;
+      // } else if (height < 566) {
+      //   height = height / 2;
+      // } else {
+      //   height = height / 3;
+      // }
       setImageHeight(height);
     });
   }, [file]);
@@ -80,14 +80,16 @@ const Photo = ({ id, user, caption, totalLikes, isLiked, file }) => {
   return (
     <Container>
       <Header onPress={navigateToProfile}>
-        <UserAvatar resizeMode="contain" source={{ uri: user.avatar }} />
+        <UserAvatar resizeMode="cover" source={{ uri: user.avatar }} />
         <UserName>{user.userName}</UserName>
       </Header>
       <File
-        resizeMode="cover"
         style={{
-          width,
-          height: imageHeight,
+          width: null,
+          height: 350,
+          // width: '100%',
+          // height: undefined,
+          // aspectRatio: 1,
         }}
         source={{ uri: file }}
       />
@@ -101,17 +103,24 @@ const Photo = ({ id, user, caption, totalLikes, isLiked, file }) => {
             />
           </Action>
           <Action>
-            <Ionicons name="chatbubble-outline" color="white" size={22} />
+            <Ionicons
+              onPress={() => navigation.navigate('Comments')}
+              name="chatbubble-outline"
+              color="white"
+              size={22}
+            />
           </Action>
         </Actions>
         <TouchableOpacity onPress={() => navigation.navigate('Likes')}>
           <Likes>{totalLikes === 1 ? '1 like' : `${totalLikes} likes`}</Likes>
         </TouchableOpacity>
         <Caption>
-          <TouchableOpacity onPress={navigateToProfile}>
-            <UserName>{user.userName}</UserName>
-          </TouchableOpacity>
-          <CaptionText>{caption}</CaptionText>
+          <CaptionText>
+            <UserName onPress={navigateToProfile}>
+              {user.userName + '  '}
+            </UserName>
+            {caption}
+          </CaptionText>
         </Caption>
       </ExtraContainer>
     </Container>
