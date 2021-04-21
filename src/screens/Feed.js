@@ -8,6 +8,7 @@ import {
   View,
 } from 'react-native';
 import { logUserOut } from '../apollo';
+import Photo from '../components/Photo';
 import ScreenLayout from '../components/ScreenLayout';
 import { COMMENT_FRAGMENT, PHOTO_FRAGMENT } from '../fragments';
 
@@ -34,20 +35,18 @@ const FEED_QUERY = gql`
 const Feed = ({ navigation }) => {
   const { data, loading } = useQuery(FEED_QUERY);
 
-  const renderItem = ({ item: photo }) => {
-    return (
-      <View style={{ flex: 1 }}>
-        <Text style={{ color: 'white' }}>{photo.caption}</Text>
-      </View>
-    );
+  const renderPhoto = ({ item: photo }) => {
+    return <Photo {...photo} />;
   };
 
   return (
     <ScreenLayout loading={loading}>
       <FlatList
+        showsVerticalScrollIndicator={false}
+        style={{ width: '100%' }}
         data={data?.seeFeed}
         keyExtractor={(photo) => '' + photo.id}
-        renderItem={renderItem}
+        renderItem={renderPhoto}
       />
     </ScreenLayout>
   );
