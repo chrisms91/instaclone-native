@@ -34,7 +34,7 @@ export default function App() {
       isLoggedInVar(true);
       tokenVar(token);
     }
-    // cache persistence
+    // store cache to asyncstorage so when the server is off, user can still access prev visited screens.
     await persistCache({
       cache,
       storage: new AsyncStorageWrapper(AsyncStorage),

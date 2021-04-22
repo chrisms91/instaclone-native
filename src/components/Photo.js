@@ -5,11 +5,21 @@ import {
   TouchableOpacity,
   useWindowDimensions,
 } from 'react-native';
+import { gql, useMutation } from '@apollo/client';
 import { useNavigation } from '@react-navigation/core';
 import { Ionicons } from '@expo/vector-icons';
 import styled from 'styled-components/native';
 import PropTypes from 'prop-types';
 import LoadingIndicator from './LoadingIndicator';
+
+const TOGGLE_LIKE_MUTATION = gql`
+  mutation toggleLike($id: Int!) {
+    toggleLike(id: $id) {
+      ok
+      error
+    }
+  }
+`;
 
 const Container = styled.View``;
 
@@ -62,6 +72,38 @@ const ExtraContainer = styled.View`
 `;
 
 const Photo = ({ id, user, caption, totalLikes, isLiked, file }) => {
+  const updateToggleLike = (cache, result) => {
+    const {
+      data: {
+        toggleLike: { ok, error },
+      },
+    } = result;
+
+    if (ok) {
+      const photoId = `Photo:${id}`;
+      cache.modify({
+        id: photoId,
+        fields: {
+          isLiked(cachedVal) {
+            return !cachedVal;
+          },
+          totalLikes(cachedTotalLikes) {
+            if (isLiked) {
+              return cachedTotalLikes - 1;
+            }
+            return cachedTotalLikes + 1;
+          },
+        },
+      });
+    }
+  };
+  const [toggleLikeMutation] = useMutation(TOGGLE_LIKE_MUTATION, {
+    variables: {
+      id,
+    },
+    update: updateToggleLike,
+  });
+
   const [imageLoading, setImageLoading] = useState(false);
   const navigation = useNavigation();
   const { width, height } = useWindowDimensions();
@@ -95,7 +137,7 @@ const Photo = ({ id, user, caption, totalLikes, isLiked, file }) => {
       />
       <ExtraContainer>
         <Actions>
-          <Action>
+          <Action onPress={toggleLikeMutation}>
             <Ionicons
               name={isLiked ? 'heart' : 'heart-outline'}
               color={isLiked ? 'tomato' : 'white'}
