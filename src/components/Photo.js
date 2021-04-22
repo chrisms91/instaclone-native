@@ -69,13 +69,6 @@ const Photo = ({ id, user, caption, totalLikes, isLiked, file }) => {
 
   useEffect(() => {
     Image.getSize(file, (width, height) => {
-      // if (height > 1350) {
-      //   height = height / 8;
-      // } else if (height < 566) {
-      //   height = height / 2;
-      // } else {
-      //   height = height / 3;
-      // }
       setImageHeight(height);
     });
   }, [file]);
