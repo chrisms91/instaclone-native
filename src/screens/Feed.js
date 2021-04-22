@@ -13,8 +13,8 @@ import ScreenLayout from '../components/ScreenLayout';
 import { COMMENT_FRAGMENT, PHOTO_FRAGMENT } from '../fragments';
 
 const FEED_QUERY = gql`
-  query seeFeed {
-    seeFeed {
+  query seeFeed($offset: Int!) {
+    seeFeed(offset: $offset) {
       ...PhotoFragment
       user {
         userName
@@ -33,10 +33,24 @@ const FEED_QUERY = gql`
 `;
 
 const Feed = ({ navigation }) => {
-  const { data, loading } = useQuery(FEED_QUERY);
+  const { data, loading, refetch, fetchMore } = useQuery(FEED_QUERY, {
+    variables: {
+      offset: 0,
+    },
+  });
 
   const renderPhoto = ({ item: photo }) => {
     return <Photo {...photo} />;
+  };
+
+  const pullToRefresh = async () => {
+    try {
+      setRefreshing(true);
+      await refetch();
+      setRefreshing(false);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const [refreshing, setRefreshing] = useState(false);
@@ -44,8 +58,16 @@ const Feed = ({ navigation }) => {
   return (
     <ScreenLayout loading={loading}>
       <FlatList
+        onEndReachedThreshold={0.05}
+        onEndReached={() =>
+          fetchMore({
+            variables: {
+              offset: data?.seeFeed?.length,
+            },
+          })
+        }
         refreshing={refreshing}
-        onRefresh={() => setRefreshing(true)}
+        onRefresh={pullToRefresh}
         showsVerticalScrollIndicator={false}
         style={{ width: '100%' }}
         data={data?.seeFeed}
