@@ -1,5 +1,5 @@
 import { gql, useQuery } from '@apollo/client';
-import React from 'react';
+import React, { useState } from 'react';
 import {
   ActivityIndicator,
   FlatList,
@@ -39,9 +39,13 @@ const Feed = ({ navigation }) => {
     return <Photo {...photo} />;
   };
 
+  const [refreshing, setRefreshing] = useState(false);
+
   return (
     <ScreenLayout loading={loading}>
       <FlatList
+        refreshing={refreshing}
+        onRefresh={() => setRefreshing(true)}
         showsVerticalScrollIndicator={false}
         style={{ width: '100%' }}
         data={data?.seeFeed}

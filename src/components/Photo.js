@@ -1,9 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { Image, TouchableOpacity, useWindowDimensions } from 'react-native';
+import {
+  ActivityIndicator,
+  Image,
+  TouchableOpacity,
+  useWindowDimensions,
+} from 'react-native';
 import { useNavigation } from '@react-navigation/core';
 import { Ionicons } from '@expo/vector-icons';
 import styled from 'styled-components/native';
 import PropTypes from 'prop-types';
+import LoadingIndicator from './LoadingIndicator';
 
 const Container = styled.View``;
 
@@ -56,6 +62,7 @@ const ExtraContainer = styled.View`
 `;
 
 const Photo = ({ id, user, caption, totalLikes, isLiked, file }) => {
+  const [imageLoading, setImageLoading] = useState(false);
   const navigation = useNavigation();
   const { width, height } = useWindowDimensions();
   const [imageHeight, setImageHeight] = useState(height - 450);
@@ -83,13 +90,13 @@ const Photo = ({ id, user, caption, totalLikes, isLiked, file }) => {
         <UserAvatar resizeMode="cover" source={{ uri: user.avatar }} />
         <UserName>{user.userName}</UserName>
       </Header>
+      {imageLoading && <LoadingIndicator />}
       <File
+        onLoadStart={() => setImageLoading(true)}
+        onLoadEnd={() => setImageLoading(false)}
         style={{
           width: null,
           height: 350,
-          // width: '100%',
-          // height: undefined,
-          // aspectRatio: 1,
         }}
         source={{ uri: file }}
       />
