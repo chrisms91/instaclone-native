@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigation } from '@react-navigation/native';
 import styled from 'styled-components/native';
 import { colors } from '../colors';
 
@@ -6,10 +7,10 @@ const Wrapper = styled.View`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  padding: 5px 15px;
+  padding: 10px 15px;
 `;
 
-const Column = styled.View`
+const Column = styled.TouchableOpacity`
   flex-direction: row;
   align-items: center;
 `;
@@ -38,10 +39,18 @@ const FollowBtnText = styled.Text`
   color: white;
 `;
 
-const UserRow = ({ avatar, userName, isFollowing, isMe }) => {
+const UserRow = ({ id, avatar, userName, isFollowing, isMe }) => {
+  const navigation = useNavigation();
   return (
     <Wrapper>
-      <Column>
+      <Column
+        onPress={() =>
+          navigation.navigate('Profile', {
+            id,
+            userName,
+          })
+        }
+      >
         <Avatar source={{ uri: avatar }} />
         <Username>{userName}</Username>
       </Column>

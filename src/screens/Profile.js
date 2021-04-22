@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Text, View } from 'react-native';
 import styled from 'styled-components/native';
 import { logUserOut } from '../apollo';
@@ -11,7 +11,14 @@ const Container = styled.View`
   background-color: black;
 `;
 
-const Profile = () => {
+const Profile = ({ navigation, route }) => {
+  useEffect(() => {
+    if (route?.params?.userName) {
+      navigation.setOptions({
+        title: route.params.userName,
+      });
+    }
+  }, []);
   return (
     <Container>
       <Text style={{ color: 'white' }}>Someone's Profile</Text>

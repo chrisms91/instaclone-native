@@ -116,7 +116,10 @@ const Photo = ({ id, user, caption, totalLikes, isLiked, file }) => {
   // }, [file]);
 
   const navigateToProfile = () => {
-    navigation.navigate('Profile');
+    navigation.navigate('Profile', {
+      userName: user.userName,
+      id: user.id,
+    });
   };
 
   return (
