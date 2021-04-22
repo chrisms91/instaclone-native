@@ -43,7 +43,7 @@ const Feed = ({ navigation }) => {
     return <Photo {...photo} />;
   };
 
-  const pullToRefresh = async () => {
+  const onPullToRefresh = async () => {
     try {
       setRefreshing(true);
       await refetch();
@@ -67,7 +67,7 @@ const Feed = ({ navigation }) => {
           })
         }
         refreshing={refreshing}
-        onRefresh={pullToRefresh}
+        onRefresh={onPullToRefresh}
         showsVerticalScrollIndicator={false}
         style={{ width: '100%' }}
         data={data?.seeFeed}

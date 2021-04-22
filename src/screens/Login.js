@@ -32,6 +32,8 @@ const Login = ({ route: { params } }) => {
 
     if (ok) {
       await logUserIn(token);
+    } else {
+      console.log(error);
     }
   };
   const [logInMutation, { loading }] = useMutation(LOGIN_MUTATION, {

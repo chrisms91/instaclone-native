@@ -109,11 +109,11 @@ const Photo = ({ id, user, caption, totalLikes, isLiked, file }) => {
   const { width, height } = useWindowDimensions();
   const [imageHeight, setImageHeight] = useState(height - 450);
 
-  useEffect(() => {
-    Image.getSize(file, (width, height) => {
-      setImageHeight(height);
-    });
-  }, [file]);
+  // useEffect(() => {
+  //   Image.getSize(file, (width, height) => {
+  //     setImageHeight(height);
+  //   });
+  // }, [file]);
 
   const navigateToProfile = () => {
     navigation.navigate('Profile');
@@ -153,7 +153,13 @@ const Photo = ({ id, user, caption, totalLikes, isLiked, file }) => {
             />
           </Action>
         </Actions>
-        <TouchableOpacity onPress={() => navigation.navigate('Likes')}>
+        <TouchableOpacity
+          onPress={() =>
+            navigation.navigate('Likes', {
+              photoId: id,
+            })
+          }
+        >
           <Likes>{totalLikes === 1 ? '1 like' : `${totalLikes} likes`}</Likes>
         </TouchableOpacity>
         <Caption>
