@@ -5,14 +5,16 @@ import Feed from '../screens/Feed';
 import Search from '../screens/Search';
 import Notifications from '../screens/Notifications';
 import Profile from '../screens/Profile';
-import { View } from 'react-native';
+import { Image, View } from 'react-native';
 import TabIcon from '../components/nav/TabIcon';
 import Me from '../screens/Me';
 import SharedStackNav from './SharedStackNav';
+import useMe from '../hooks/useMe';
 
 const Tab = createBottomTabNavigator();
 
 const LoggedInNav = () => {
+  const { data } = useMe();
   return (
     <Tab.Navigator
       tabBarOptions={{
@@ -66,9 +68,21 @@ const LoggedInNav = () => {
       <Tab.Screen
         name="Me"
         options={{
-          tabBarIcon: ({ focused, color, size }) => (
-            <TabIcon iconName="person" color={color} focused={focused} />
-          ),
+          tabBarIcon: ({ focused, color, size }) =>
+            data?.me?.avatar ? (
+              <Image
+                source={{ uri: data.me.avatar }}
+                style={{
+                  height: 20,
+                  width: 20,
+                  borderRadius: 5,
+                  ...(focused && { borderColor: 'white', borderWidth: 1.5 }),
+                }}
+              />
+            ) : (
+              <TabIcon iconName="person" color={color} focused={focused} />
+            ),
+          // <TabIcon iconName="person" color={color} focused={focused} />
         }}
       >
         {() => <SharedStackNav screenName="Me" />}
