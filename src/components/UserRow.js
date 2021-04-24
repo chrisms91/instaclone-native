@@ -1,7 +1,26 @@
 import React from 'react';
+import { gql, useMutation } from '@apollo/client';
 import { useNavigation } from '@react-navigation/native';
 import styled from 'styled-components/native';
 import { colors } from '../colors';
+
+const FOLLOW_USER_MUTATION = gql`
+  mutation followUser($userName: String!) {
+    followUser(userName: $userName) {
+      ok
+      error
+    }
+  }
+`;
+
+const UNFOLLOW_USER_MUTATION = gql`
+  mutation unfollowUser($userName: String!) {
+    unfollowUser(userName: $userName) {
+      ok
+      error
+    }
+  }
+`;
 
 const Wrapper = styled.View`
   flex-direction: row;
@@ -41,6 +60,71 @@ const FollowBtnText = styled.Text`
 
 const UserRow = ({ id, avatar, userName, isFollowing, isMe }) => {
   const navigation = useNavigation();
+
+  const followUserUpdate = (cache, result) => {
+    const {
+      data: {
+        followUser: { ok, error },
+      },
+    } = result;
+    if (ok) {
+      cache.modify({
+        id: `User:${id}`,
+        fields: {
+          isFollowing(cachedIsFollowing) {
+            return true;
+          },
+        },
+      });
+    } else {
+      console.log(error);
+      return;
+    }
+  };
+
+  const unfollowUserUpdate = (cache, result) => {
+    const {
+      data: {
+        unfollowUser: { ok, error },
+      },
+    } = result;
+    if (ok) {
+      cache.modify({
+        id: `User:${id}`,
+        fields: {
+          isFollowing(cachedIsFollowing) {
+            return false;
+          },
+        },
+      });
+    } else {
+      console.log(error);
+      return;
+    }
+  };
+
+  const [followUser] = useMutation(FOLLOW_USER_MUTATION, {
+    variables: {
+      userName,
+    },
+    update: followUserUpdate,
+  });
+
+  const [unfollowUser] = useMutation(UNFOLLOW_USER_MUTATION, {
+    variables: {
+      userName,
+    },
+    update: unfollowUserUpdate,
+  });
+
+  const onFollowBtnPress = () => {
+    if (isFollowing) {
+      unfollowUser();
+    } else {
+      followUser();
+    }
+  };
+
   return (
     <Wrapper>
       <Column
@@ -55,7 +139,7 @@ const UserRow = ({ id, avatar, userName, isFollowing, isMe }) => {
         <Username>{userName}</Username>
       </Column>
       {!isMe ? (
-        <FollowBtn>
+        <FollowBtn onPress={onFollowBtnPress}>
           <FollowBtnText>{isFollowing ? 'Unfollow' : 'Follow'}</FollowBtnText>
         </FollowBtn>
       ) : null}
