@@ -109,11 +109,11 @@ const Photo = ({ id, user, caption, totalLikes, isLiked, file }) => {
   const { width, height } = useWindowDimensions();
   const [imageHeight, setImageHeight] = useState(height - 450);
 
-  // useEffect(() => {
-  //   Image.getSize(file, (width, height) => {
-  //     setImageHeight(height);
-  //   });
-  // }, [file]);
+  useEffect(() => {
+    Image.getSize(file, (width, height) => {
+      setImageHeight(350);
+    });
+  }, [file]);
 
   const navigateToProfile = () => {
     navigation.navigate('Profile', {
@@ -133,8 +133,8 @@ const Photo = ({ id, user, caption, totalLikes, isLiked, file }) => {
         onLoadStart={() => setImageLoading(true)}
         onLoadEnd={() => setImageLoading(false)}
         style={{
-          width: null,
-          height: 350,
+          width,
+          height: imageHeight,
         }}
         source={{ uri: file }}
       />

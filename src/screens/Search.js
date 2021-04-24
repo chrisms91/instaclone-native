@@ -7,6 +7,9 @@ import {
   View,
   TextInput,
   ActivityIndicator,
+  useWindowDimensions,
+  FlatList,
+  Image,
 } from 'react-native';
 import styled from 'styled-components/native';
 import { colors } from '../colors';
@@ -39,9 +42,17 @@ const MessageText = styled.Text`
   font-weight: 600;
 `;
 
-const Input = styled.TextInput``;
+const Input = styled.TextInput`
+  background-color: rgba(255, 255, 255, 1);
+  color: black;
+  width: ${(props) => props.width / 1.5}px;
+  padding: 5px 10px;
+  border-radius: 7px;
+`;
 
 const Search = ({ navigation }) => {
+  const { width } = useWindowDimensions();
+  const numColumns = 4;
   const { setValue, register, watch, handleSubmit } = useForm();
   const [startQueryFn, { loading, data, called }] = useLazyQuery(SEARCH_PHOTOS);
 
@@ -53,13 +64,11 @@ const Search = ({ navigation }) => {
     });
   };
 
-  console.log(data);
-
   const SearchBox = () => (
-    <TextInput
-      style={{ backgroundColor: 'white' }}
+    <Input
+      width={width}
       autoCorrect={false}
-      placeholderTextColor="black"
+      placeholderTextColor="rgba(0, 0, 0, 0.7)"
       placeholder="Search photos"
       autoCapitalize="none"
       returnKeyType="search"
@@ -78,6 +87,21 @@ const Search = ({ navigation }) => {
     });
   }, []);
 
+  const renderItem = ({ item: photo }) => (
+    <TouchableOpacity
+      onPress={() =>
+        navigation.navigate('Photo', {
+          photoId: photo.id,
+        })
+      }
+    >
+      <Image
+        source={{ uri: photo.file }}
+        style={{ width: width / numColumns, height: 100 }}
+      />
+    </TouchableOpacity>
+  );
+
   return (
     <DismissKeyboard>
       <Container>
@@ -92,10 +116,19 @@ const Search = ({ navigation }) => {
             <MessageText>Search photos by keyword</MessageText>
           </MessageContainer>
         ) : null}
-        {data?.searchPhotos !== undefined && data?.searchPhotos.length === 0 ? (
-          <MessageContainer>
-            <MessageText>Could not find anything...</MessageText>
-          </MessageContainer>
+        {data?.searchPhotos !== undefined ? (
+          data?.searchPhotos?.length === 0 ? (
+            <MessageContainer>
+              <MessageText>Could not find anything.</MessageText>
+            </MessageContainer>
+          ) : (
+            <FlatList
+              data={data?.searchPhotos}
+              keyExtractor={(photo) => '' + photo.id}
+              renderItem={renderItem}
+              numColumns={numColumns}
+            />
+          )
         ) : null}
       </Container>
     </DismissKeyboard>

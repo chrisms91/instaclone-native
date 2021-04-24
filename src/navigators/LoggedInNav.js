@@ -75,7 +75,7 @@ const LoggedInNav = () => {
                 style={{
                   height: 20,
                   width: 20,
-                  borderRadius: 5,
+                  borderRadius: 10,
                   ...(focused && { borderColor: 'white', borderWidth: 1.5 }),
                 }}
               />
