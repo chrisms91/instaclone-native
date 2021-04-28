@@ -11,12 +11,12 @@ const Container = styled.View`
   background-color: black;
 `;
 
-const Upload = ({ navigation }) => {
+const TakePhoto = ({ navigation }) => {
   return (
     <Container>
-      <Text style={{ color: 'white' }}>Upload </Text>
+      <Text style={{ color: 'white' }}>TakePhoto </Text>
     </Container>
   );
 };
 
-export default Upload;
+export default TakePhoto;
