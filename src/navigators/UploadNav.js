@@ -31,7 +31,12 @@ const UploadNav = () => {
               headerTintColor: 'white',
               headerBackTitleVisible: false,
               headerBackImage: ({ tintColor }) => (
-                <Ionicons color={tintColor} name="close" size={28} />
+                <Ionicons
+                  color={tintColor}
+                  name="close"
+                  size={28}
+                  style={{ marginLeft: 5 }}
+                />
               ),
               headerStyle: {
                 backgroundColor: 'black',

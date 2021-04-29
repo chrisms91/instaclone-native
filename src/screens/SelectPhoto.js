@@ -30,6 +30,13 @@ const IconContainer = styled.View`
   right: 5px;
 `;
 
+const HeaderRightText = styled.Text`
+  color: ${colors.blue};
+  font-size: 16px;
+  font-weight: 600;
+  margin-right: 10px;
+`;
+
 const SelectPhoto = ({ navigation }) => {
   const [ok, setOk] = useState(false);
   const [photos, setPhotos] = useState([]);
@@ -64,6 +71,17 @@ const SelectPhoto = ({ navigation }) => {
 
   useEffect(() => {
     getPermissions();
+  }, []);
+
+  const headerRight = () => (
+    <TouchableOpacity>
+      <HeaderRightText>Next</HeaderRightText>
+    </TouchableOpacity>
+  );
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight,
+    });
   }, []);
 
   const choosePhoto = (uri) => {
