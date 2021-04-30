@@ -37,6 +37,8 @@ const HeaderRightText = styled.Text`
   margin-right: 10px;
 `;
 
+//TODO: medialibrary doesn't fetch every photos in the library.
+
 const SelectPhoto = ({ navigation }) => {
   const [ok, setOk] = useState(false);
   const [photos, setPhotos] = useState([]);
@@ -45,7 +47,13 @@ const SelectPhoto = ({ navigation }) => {
   const { width } = useWindowDimensions();
 
   const getPhotos = async () => {
-    const { assets: photos } = await MediaLibrary.getAssetsAsync();
+    const {
+      assets: photos,
+      totalCount,
+      hasNextPage,
+      endCursor,
+    } = await MediaLibrary.getAssetsAsync();
+    console.log(totalCount, hasNextPage, endCursor);
     setPhotos(photos);
     setChosenPhoto(photos[0]?.uri);
   };
@@ -120,6 +128,8 @@ const SelectPhoto = ({ navigation }) => {
           numColumns={numColumns}
           keyExtractor={(photo) => photo.id}
           renderItem={renderItem}
+          onEndReachedThreshold={0}
+          onEndReached={() => {}}
         />
       </Bottom>
     </Container>
