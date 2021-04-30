@@ -53,7 +53,7 @@ const SelectPhoto = ({ navigation }) => {
       hasNextPage,
       endCursor,
     } = await MediaLibrary.getAssetsAsync();
-    console.log(totalCount, hasNextPage, endCursor);
+    // console.log(totalCount, hasNextPage, endCursor);
     setPhotos(photos);
     setChosenPhoto(photos[0]?.uri);
   };
