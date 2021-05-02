@@ -14,6 +14,7 @@ import { Ionicons } from '@expo/vector-icons';
 import styled from 'styled-components/native';
 import { logUserOut } from '../apollo';
 import { colors } from '../colors';
+import { useIsFocused } from '@react-navigation/core';
 
 const Container = styled.View`
   flex: 1;
@@ -80,6 +81,7 @@ const TakePhoto = ({ navigation }) => {
   const [flashMode, setFlashMode] = useState(Camera.Constants.FlashMode.off);
   const [zoom, setZoom] = useState(0);
   const [cameraType, setCameraType] = useState(Camera.Constants.Type.front);
+  const isFocused = useIsFocused();
 
   const getPermissions = async () => {
     const { granted } = await Camera.requestPermissionsAsync();
@@ -155,20 +157,22 @@ const TakePhoto = ({ navigation }) => {
 
   return (
     <Container>
-      <StatusBar hidden={true} />
+      {isFocused ? <StatusBar hidden={true} /> : null}
       {photoTaken === '' ? (
-        <Camera
-          type={cameraType}
-          style={{ flex: 1 }}
-          zoom={zoom}
-          flashMode={flashMode}
-          ref={camera}
-          onCameraReady={onCameraReady}
-        >
-          <CloseBtn onPress={() => navigation.navigate('Tabs')}>
-            <Ionicons name="close" color="white" size={30} />
-          </CloseBtn>
-        </Camera>
+        isFocused ? (
+          <Camera
+            type={cameraType}
+            style={{ flex: 1 }}
+            zoom={zoom}
+            flashMode={flashMode}
+            ref={camera}
+            onCameraReady={onCameraReady}
+          >
+            <CloseBtn onPress={() => navigation.navigate('Tabs')}>
+              <Ionicons name="close" color="white" size={30} />
+            </CloseBtn>
+          </Camera>
+        ) : null
       ) : (
         <Image source={{ uri: photoTaken }} style={{ flex: 1 }} />
       )}

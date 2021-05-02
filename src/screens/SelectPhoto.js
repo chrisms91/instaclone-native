@@ -1,7 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import * as MediaLibrary from 'expo-media-library';
 import { Ionicons } from '@expo/vector-icons';
-import { FlatList, Image, Text, TouchableOpacity, View } from 'react-native';
+import {
+  FlatList,
+  Image,
+  StatusBar,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import styled from 'styled-components/native';
 import { logUserOut } from '../apollo';
 import { colors } from '../colors';
@@ -114,6 +121,7 @@ const SelectPhoto = ({ navigation }) => {
 
   return (
     <Container>
+      <StatusBar hidden={false} />
       <Top>
         {chosenPhoto !== '' ? (
           <Image
