@@ -6,6 +6,7 @@ import TabsNav from './TabsNav';
 import Upload from '../screens/SelectPhoto';
 import UploadNav from './UploadNav';
 import UploadForm from '../screens/UploadForm';
+import MessagesNav from './MessagesNav';
 
 const Stack = createStackNavigator();
 
@@ -40,6 +41,11 @@ const LoggedInNav = () => {
           headerTintColor: 'white',
           headerStyle: { backgroundColor: 'black' },
         }}
+      />
+      <Stack.Screen
+        name="Messages"
+        options={{ headerShown: false }}
+        component={MessagesNav}
       />
     </Stack.Navigator>
   );

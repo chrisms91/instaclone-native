@@ -1,5 +1,5 @@
 import { gql, useQuery } from '@apollo/client';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   ActivityIndicator,
   FlatList,
@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { logUserOut } from '../apollo';
 import Photo from '../components/Photo';
 import ScreenLayout from '../components/ScreenLayout';
@@ -34,6 +35,7 @@ const FEED_QUERY = gql`
 `;
 
 const Feed = ({ navigation }) => {
+  const [refreshing, setRefreshing] = useState(false);
   const { data, loading, refetch, fetchMore } = useQuery(FEED_QUERY, {
     variables: {
       offset: 0,
@@ -54,7 +56,20 @@ const Feed = ({ navigation }) => {
     }
   };
 
-  const [refreshing, setRefreshing] = useState(false);
+  const MessagesButton = () => (
+    <TouchableOpacity
+      style={{ marginRight: 20 }}
+      onPress={() => navigation.navigate('Messages')}
+    >
+      <Ionicons name="paper-plane" color="white" size={24} />
+    </TouchableOpacity>
+  );
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight: MessagesButton,
+    });
+  }, []);
 
   return (
     <ScreenLayout loading={loading}>
