@@ -53,6 +53,16 @@ const SelectPhoto = ({ navigation }) => {
   const numColumns = 4;
   const { width } = useWindowDimensions();
 
+  useEffect(() => {
+    getPermissions();
+  }, []);
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight,
+    });
+  }, [chosenPhoto]);
+
   const getPhotos = async () => {
     const {
       assets: photos,
@@ -84,20 +94,17 @@ const SelectPhoto = ({ navigation }) => {
     }
   };
 
-  useEffect(() => {
-    getPermissions();
-  }, []);
-
   const headerRight = () => (
-    <TouchableOpacity>
+    <TouchableOpacity
+      onPress={() =>
+        navigation.navigate('UploadForm', {
+          file: chosenPhoto,
+        })
+      }
+    >
       <HeaderRightText>Next</HeaderRightText>
     </TouchableOpacity>
   );
-  useEffect(() => {
-    navigation.setOptions({
-      headerRight,
-    });
-  }, []);
 
   const choosePhoto = (uri) => {
     setChosenPhoto(uri);

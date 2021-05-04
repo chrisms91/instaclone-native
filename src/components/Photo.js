@@ -132,6 +132,7 @@ const Photo = ({ id, user, caption, totalLikes, isLiked, file }) => {
       <File
         onLoadStart={() => setImageLoading(true)}
         onLoadEnd={() => setImageLoading(false)}
+        resizeMode="cover"
         style={{
           width,
           height: imageHeight,

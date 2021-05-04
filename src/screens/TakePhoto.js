@@ -75,7 +75,7 @@ const PhotoActionText = styled.Text`
 
 const TakePhoto = ({ navigation }) => {
   const camera = useRef();
-  const [photoTaken, setPhotoTaken] = useState('');
+  const [takenPhoto, settakenPhoto] = useState('');
   const [cameraReady, setCameraReady] = useState(false);
   const [ok, setOk] = useState(false);
   const [flashMode, setFlashMode] = useState(Camera.Constants.FlashMode.off);
@@ -125,21 +125,22 @@ const TakePhoto = ({ navigation }) => {
         quality: 1,
         exif: true,
       });
-      setPhotoTaken(uri);
+      settakenPhoto(uri);
       // const asset = await MediaLibrary.createAssetAsync(uri);
     }
   };
 
-  const onDismiss = () => setPhotoTaken('');
+  const onDismiss = () => settakenPhoto('');
 
   const goToUploadScreen = async (save) => {
     if (save) {
       // save photo
-      console.log('photoSaved');
-      await MediaLibrary.saveToLibraryAsync(photoTaken);
+      await MediaLibrary.saveToLibraryAsync(takenPhoto);
     }
     // go to upload screen
-    console.log('Will Upload', photoTaken);
+    navigation.navigate('UploadForm', {
+      file: takenPhoto,
+    });
   };
 
   const onUpload = () => {
@@ -158,7 +159,7 @@ const TakePhoto = ({ navigation }) => {
   return (
     <Container>
       {isFocused ? <StatusBar hidden={true} /> : null}
-      {photoTaken === '' ? (
+      {takenPhoto === '' ? (
         isFocused ? (
           <Camera
             type={cameraType}
@@ -174,10 +175,10 @@ const TakePhoto = ({ navigation }) => {
           </Camera>
         ) : null
       ) : (
-        <Image source={{ uri: photoTaken }} style={{ flex: 1 }} />
+        <Image source={{ uri: takenPhoto }} style={{ flex: 1 }} />
       )}
 
-      {photoTaken === '' ? (
+      {takenPhoto === '' ? (
         // actions with camera
         <Actions>
           <SliderContainer>
