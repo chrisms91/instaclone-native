@@ -4,6 +4,7 @@ import { gql, useQuery } from '@apollo/client';
 import { USER_FRAGMENT } from '../fragments';
 import ScreenLayout from '../components/ScreenLayout';
 import UserRow from '../components/UserRow';
+import ItemSeparator from '../components/ItemSeparator';
 
 const LIKES_QUERY = gql`
   query seePhotoLikes($id: Int!) {
@@ -34,15 +35,7 @@ const Likes = ({ route }) => {
   return (
     <ScreenLayout loading={loading}>
       <FlatList
-        ItemSeparatorComponent={() => (
-          <View
-            style={{
-              width: '100%',
-              height: 1,
-              backgroundColor: 'rgba(255, 255, 255, 0.2)',
-            }}
-          ></View>
-        )}
+        ItemSeparatorComponent={() => <ItemSeparator />}
         refreshing={refreshing}
         onRefresh={onPullToRefresh}
         data={data?.seePhotoLikes}
