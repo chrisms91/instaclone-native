@@ -15,17 +15,22 @@ const MessagesNav = () => {
         headerStyle: {
           backgroundColor: 'black',
         },
-        headerBackImage: ({ tintColor }) => (
-          <Ionicons
-            name="close"
-            color={tintColor}
-            size={28}
-            style={{ marginLeft: 5 }}
-          />
-        ),
       }}
     >
-      <Stack.Screen name="Rooms" component={Rooms} />
+      <Stack.Screen
+        name="Rooms"
+        component={Rooms}
+        options={{
+          headerBackImage: ({ tintColor }) => (
+            <Ionicons
+              name="chevron-down"
+              color={tintColor}
+              size={28}
+              style={{ marginLeft: 5 }}
+            />
+          ),
+        }}
+      />
       <Stack.Screen name="Room" component={Room} />
     </Stack.Navigator>
   );

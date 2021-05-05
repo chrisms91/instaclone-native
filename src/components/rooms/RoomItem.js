@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/core';
 import React from 'react';
 import styled from 'styled-components/native';
 import { colors } from '../../colors';
@@ -48,14 +49,21 @@ const UnreadText = styled.Text`
 
 const RoomItem = ({ users, unreadTotal, id }) => {
   const { data: meData } = useMe();
-  const notMe = users.find((user) => user.userName !== meData?.me?.userName);
-
+  const navigation = useNavigation();
+  const talkingTo = users.find(
+    (user) => user.userName !== meData?.me?.userName
+  );
+  const goToRoom = () =>
+    navigation.navigate('Room', {
+      id,
+      talkingTo,
+    });
   return (
-    <RoomContainer>
+    <RoomContainer onPress={goToRoom}>
       <Column>
-        <Avatar source={{ uri: notMe.avatar }} />
+        <Avatar source={{ uri: talkingTo.avatar }} />
         <Data>
-          <Username>{notMe.userName}</Username>
+          <Username>{talkingTo.userName}</Username>
           <UnreadText>
             {unreadTotal} unread {unreadTotal === 1 ? 'message' : 'messages'}
           </UnreadText>
