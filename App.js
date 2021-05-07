@@ -35,11 +35,11 @@ export default function App() {
       tokenVar(token);
     }
     // store cache to asyncstorage so when the server is off, user can still access prev visited screens.
-    await persistCache({
-      cache,
-      storage: new AsyncStorageWrapper(AsyncStorage),
-      serialize: false,
-    });
+    // await persistCache({
+    //   cache,
+    //   storage: new AsyncStorageWrapper(AsyncStorage),
+    //   serialize: false,
+    // });
     return preloadAssets();
   };
 

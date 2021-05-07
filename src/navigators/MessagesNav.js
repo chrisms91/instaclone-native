@@ -14,6 +14,7 @@ const MessagesNav = () => {
         headerBackTitleVisible: false,
         headerStyle: {
           backgroundColor: 'black',
+          shadowColor: 'rgba(255, 255, 255, 0.3)',
         },
       }}
     >
