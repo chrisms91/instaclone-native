@@ -1,11 +1,25 @@
 import React, { useEffect } from 'react';
 import { FlatList, KeyboardAvoidingView, Text, View } from 'react-native';
-import { gql, useQuery, useMutation } from '@apollo/client';
+import { gql, useQuery, useMutation, useApolloClient } from '@apollo/client';
 import { Ionicons } from '@expo/vector-icons';
 import ScreenLayout from '../components/ScreenLayout';
 import styled from 'styled-components/native';
 import { useForm } from 'react-hook-form';
 import useMe from '../hooks/useMe';
+
+const ROOM_UPDATES = gql`
+  subscription roomUpdates($id: Int!) {
+    roomUpdates(id: $id) {
+      id
+      payload
+      user {
+        userName
+        avatar
+      }
+      read
+    }
+  }
+`;
 
 const ROOM_QUERY = gql`
   query seeRoom($id: Int!) {
@@ -138,11 +152,56 @@ const Room = ({ route, navigation }) => {
     }
   );
 
-  const { data, loading } = useQuery(ROOM_QUERY, {
+  const { data, loading, subscribeToMore } = useQuery(ROOM_QUERY, {
     variables: {
       id: route?.params?.id,
     },
   });
+
+  const client = useApolloClient();
+  const updateQuery = (prevQuery, options) => {
+    const {
+      subscriptionData: {
+        data: { roomUpdates: incomingMessage },
+      },
+    } = options;
+    if (incomingMessage.id) {
+      const messageFragment = client.cache.writeFragment({
+        fragment: gql`
+          fragment NewMessage on Message {
+            id
+            payload
+            user {
+              userName
+              avatar
+            }
+            read
+          }
+        `,
+        data: incomingMessage,
+      });
+      client.cache.modify({
+        id: `Room:${route.params.id}`,
+        fields: {
+          messages(prev) {
+            return [...prev, messageFragment];
+          },
+        },
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (data?.seeRoom) {
+      subscribeToMore({
+        document: ROOM_UPDATES,
+        variables: {
+          id: route?.params?.id,
+        },
+        updateQuery,
+      });
+    }
+  }, [data]);
 
   const onValid = ({ message }) => {
     // TODO: send message to the use who is not in the room -> need to create a new room and send message with userId
