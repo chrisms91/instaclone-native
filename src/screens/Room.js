@@ -166,7 +166,7 @@ const Room = ({ route, navigation }) => {
       },
     } = options;
     if (incomingMessage.id) {
-      const messageFragment = client.cache.writeFragment({
+      const inComingMessageFragment = client.cache.writeFragment({
         fragment: gql`
           fragment NewMessage on Message {
             id
@@ -184,6 +184,13 @@ const Room = ({ route, navigation }) => {
         id: `Room:${route.params.id}`,
         fields: {
           messages(prev) {
+            const existingMessage = prev.find(
+              (msg) => msg.__ref === inComingMessageFragment.__ref
+            );
+            // prevent updating multiple duplicate messages.
+            if (existingMessage) {
+              return prev;
+            }
             return [...prev, messageFragment];
           },
         },
