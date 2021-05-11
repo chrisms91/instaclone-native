@@ -6,6 +6,7 @@ import ScreenLayout from '../components/ScreenLayout';
 import styled from 'styled-components/native';
 import { useForm } from 'react-hook-form';
 import useMe from '../hooks/useMe';
+import Message from '../components/rooms/Message';
 
 const ROOM_UPDATES = gql`
   subscription roomUpdates($id: Int!) {
@@ -13,6 +14,7 @@ const ROOM_UPDATES = gql`
       id
       payload
       user {
+        id
         userName
         avatar
       }
@@ -29,10 +31,13 @@ const ROOM_QUERY = gql`
         id
         payload
         user {
+          id
           userName
           avatar
         }
         read
+        createdAt
+        updatedAt
       }
     }
   }
@@ -46,34 +51,6 @@ const SEND_MESSAGE_MUTATION = gql`
       error
     }
   }
-`;
-
-const MessageContainer = styled.View`
-  padding: 0px 10px;
-  flex-direction: ${(props) => (props.outGoing ? 'row-reverse' : 'row')}
-  align-items: flex-end;
-`;
-
-const Author = styled.View``;
-
-const Avatar = styled.Image`
-  height: 20px;
-  width: 20px;
-  border-radius: 25px;
-`;
-
-const Message = styled.Text`
-  color: white;
-  background-color: rgba(255, 255, 255, 0.3);
-  padding: 5px 10px;
-  border-radius: 10px;
-  overflow: hidden;
-  font-size: 16px;
-  margin: 0px 10px;
-`;
-
-const Username = styled.Text`
-  color: white;
 `;
 
 const TextInput = styled.TextInput`
@@ -152,7 +129,7 @@ const Room = ({ route, navigation }) => {
     }
   );
 
-  const { data, loading, subscribeToMore } = useQuery(ROOM_QUERY, {
+  const { data, loading, subscribeToMore, refetch } = useQuery(ROOM_QUERY, {
     variables: {
       id: route?.params?.id,
     },
@@ -191,7 +168,7 @@ const Room = ({ route, navigation }) => {
             if (existingMessage) {
               return prev;
             }
-            return [...prev, messageFragment];
+            return [...prev, inComingMessageFragment];
           },
         },
       });
@@ -234,21 +211,16 @@ const Room = ({ route, navigation }) => {
 
   const renderItem = ({ item: message }) => {
     return (
-      <MessageContainer
-        outGoing={message.user.userName !== route?.params?.talkingTo?.userName}
-      >
-        <Author>
-          <Avatar source={{ uri: message.user.avatar }} />
-          {/* <Username>{message.user.userName}</Username> */}
-        </Author>
-        <Message>{message.payload}</Message>
-      </MessageContainer>
+      <Message
+        message={message}
+        talkingTo={route?.params?.talkingTo}
+        roomId={route?.params?.id}
+      />
     );
-    color: white;
   };
 
   const messages = [...(data?.seeRoom?.messages ?? [])];
-  messages.reverse();
+  messages.sort((a, b) => a.createdAt - b.createdAt).reverse();
 
   return (
     <KeyboardAvoidingView
