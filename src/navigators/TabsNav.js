@@ -90,7 +90,6 @@ const TabsNav = () => {
             ) : (
               <TabIcon iconName="person" color={color} focused={focused} />
             ),
-          // <TabIcon iconName="person" color={color} focused={focused} />
         }}
       >
         {() => <SharedStackNav screenName="Me" />}
